@@ -1,6 +1,6 @@
 # Data-Mining
 Steps:
->>>Implementation of CLIQUE Clustering Algorithm
+A.Implementation of CLIQUE Clustering Algorithm
 >>>Instructions for Executing:
 >>>In Codeblocks:
 1. Download the folder by clicking on Code button in github repository.
@@ -12,6 +12,6 @@ Steps:
       C:\Users\...\ABC
 7.Build and Run the program.
 >>>It will initially run on Target data file.
-References:
+B.References:
 1. R.  Agrawal,  J.  Gehrke,  D.  Gunopulos,  and  P.  Ragha-van, “Automatic Subspace Clustering of High DimensionalData for Data Mining Applications”.
 2. pyclustering repository
