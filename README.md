@@ -14,5 +14,5 @@ A.Implementation of CLIQUE Clustering Algorithm
 >>>It will initially run on Target data file.
 
 B.References:
-1. R.  Agrawal,  J.  Gehrke,  D.  Gunopulos,  and  P.  Ragha-van, “Automatic Subspace Clustering of High DimensionalData for Data Mining Applications”.
-2. pyclustering repository
+1. R. Agrawal,  J. Gehrke,  D. Gunopulos, and P. Ragha-van, “Automatic Subspace Clustering of High DimensionalData for Data Mining Applications”.
+2. Pyclustering Repository - (https://pyclustering.github.io/)
