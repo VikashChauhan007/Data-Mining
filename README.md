@@ -1,6 +1,6 @@
 # Data-Mining
 Steps:
-A.Implementation of CLIQUE Clustering Algorithm
+  Implementation of CLIQUE Clustering Algorithm
 >>>Instructions for Executing:
 >>>In Codeblocks:
 1. Download the folder by clicking on Code button in github repository.
