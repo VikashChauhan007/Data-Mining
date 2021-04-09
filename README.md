@@ -15,8 +15,8 @@ Tools Required: Codeblocks with CPP 14.
 
 You can check if you cpp version is 14 or by running **CPP_version_check.cpp** in the codeblocks.
 
-Steps to Run the Code
->>>In Codeblocks:
+
+> Steps to Run the Code:
 1. Download the folders in desired folder.
 2. Unzip the folder.
 3. Open Codeblocks IDE.
