@@ -9,14 +9,20 @@
 #include<algorithm>
 #include <unordered_map>
 #include<bits/stdc++.h>
-#include<windows.h>
-#include<psapi.h>
+
+// Uncomment the headers to calculate the memory footprint of the Process
+//#include<windows.h>
+//#include<psapi.h>
 
 using namespace pyclustering;
 using namespace pyclustering::clst;
 
 
  dataset read_data(const std::string & filename) {
+        /*
+            Function to read the datafile
+        */
+
         dataset data;
 
         std::ifstream file(filename);
@@ -51,7 +57,9 @@ std::string get_string_logical_location(clique_block_location &log_loc)
 
 void point_recreate(std::string str, const char delim, std::vector<std::string> &out)
 {
-    //std::cout<<"\npoint to be created is : "<<str<<std::endl;
+    /*
+        Function to recreate the deleted point object as we just have the string of that point
+    */
     size_t start;
     size_t end = 0;
 
@@ -102,7 +110,7 @@ void Delete_dict(std::unordered_map<std::string, int> &dict)
     std::string line;
     std::ifstream data_info_file;
     data_info_file.clear();
-    data_info_file.open("Target_Incremental1.data");
+    data_info_file.open("Target_Incremental.data");
     std::ofstream tempfile;
     tempfile.open("temp.txt");
 
@@ -147,7 +155,7 @@ void Delete_dict(std::unordered_map<std::string, int> &dict)
 int main()
 {
 
-    std::string filename = "res.data",  file2 = "temp.txt";
+    std::string filename = "Target_Static.data",  file2 = "temp.txt";
     std::size_t f1 = 0, f2 = 0;
 
     //To store the points
@@ -161,12 +169,12 @@ int main()
     // Storing the points to dictionary
     f1 = Store_dict(dict, filename);
 
-    // Read two-dimensional input data 'Target'.
+    // Read data provided
     dataset data = read_data(filename);
 
     // Prepare algorithm's parameters.
-    const std::size_t intervals = 8;   // defines amount of cells in grid in each dimension
-    const std::size_t threshold = 10;    // no outliers
+    const std::size_t intervals = 5;   // defines amount of cells in grid in each dimension
+    const std::size_t threshold = 1;    // no outliers
 
     // Create CLIQUE algorithm for processing.
     clique clique_instance = clique(intervals, threshold);
@@ -189,8 +197,6 @@ int main()
     }
 
 
-
-
     // Display information about extracted clusters:
     std::cout << "Details of Static: \n";
     std::cout << "Amount of clusters: " << clusters.size() << std::endl;
@@ -201,6 +207,9 @@ int main()
 
     //Start working on the incremental design
 
+
+    // Processing the new dataset
+    Delete_dict(dict);
 
     // Reading the min and max corner of each of the dimension
     std::string line;
@@ -253,12 +262,19 @@ int main()
     dataset new_data = read_data(file2);
 
     auto start = std::chrono::high_resolution_clock::now();
+
     // Taking Each point in the new list of added points
     for(auto new_point = new_data.begin() ; new_point < new_data.end() ; new_point++)
     {
-        point p = *new_point;              // Stores the location of the point in hyper-space
-        clique_block_location c_lof_loc;   // Stores the logical address of a clique block for the point
-        std::size_t logical_grid_val;      // Stores the logical value of a particular dimension
+        // Stores the location of the point in hyper-space
+        point p = *new_point;
+
+        // Stores the logical address of a clique block for the point
+        clique_block_location c_lof_loc;
+
+        // Stores the logical value of a particular dimension
+        std::size_t logical_grid_val;
+
         int i = 0;
         c_lof_loc.clear();
 
@@ -268,12 +284,13 @@ int main()
             //calculating the each dimension block value
             logical_grid_val = floor((*point_itr - m_min_corner[i]) / (m_sizes[i] / intervals));
 
+            // Saving the logical address of that dimension
             c_lof_loc.push_back(logical_grid_val);
 
         }
 
         auto clique_block_index_itr = clique_block_map.find(get_string_logical_location(c_lof_loc));
-        clique_block &temp = blocks[clique_block_index_itr->second];
+        clique_block temp = blocks[clique_block_index_itr->second];
 
 
         // Add the new point to this clique block
@@ -281,17 +298,14 @@ int main()
         std::list<std::size_t> block_points = temp.get_points();
         previous_number_of_points = block_points.size();
 
-        //std::cout<<"Number of points before new point addition:  "<<previous_number_of_points<<"\n";
         temp.add_new_point(++f1);
 
         block_points = temp.get_points();
-        //std::cout<<"Number of points after new point addition:  "<<block_points.size()<<"\n";
 
         next_number_of_points = previous_number_of_points + 1;
 
         if(previous_number_of_points <= threshold && next_number_of_points > threshold)
         {
-           // std::cout<<"Changed to dense unit after addition"<<"\n";
             std::vector<clique_block_location>  block_neighbors;
             block_neighbors.clear();
 
@@ -321,38 +335,19 @@ int main()
 
                                 std::vector<std::size_t> cluster_list = *c;
 
-                                std::size_t first_elem =  neighbour_block_points.front(); // stores the first point of the stored cluster
-
-                                //std::cout<<"Cluster points before addition: ";
-                                for(int point_inside_cluster_list  = 0 ; point_inside_cluster_list < cluster_list.size() ; point_inside_cluster_list++)
-                                {
-                                    //std::cout<<cluster_list[point_inside_cluster_list]<<"  ";
-                                }
-
-                                //std::cout<<std::endl;
-
+                                // stores the first point of the stored cluster
+                                std::size_t first_elem =  neighbour_block_points.front();
 
                                 // Each cluster ko access kar raha hu
-                                //std::cout<<"Element to be found   "<<first_elem<<"\n";
                                 if (std::find(cluster_list.cbegin(), cluster_list.cend(), first_elem) != cluster_list.cend())
                                 {
-                                    //std::cout<<"Element Found\n"<<"Points to be added in clusters: ";
-
                                     for(std::size_t index : block_points)
                                     {
-                                        //std::cout<<index<<"  ";
                                         (*c).push_back(std::size_t(index));
                                     }
-
                                 }
 
                                 cluster_list = *c;
-                                //std::cout<<"\nCluster points after addition: ";
-                                for(int point_inside_cluster_list  = 0 ; point_inside_cluster_list < cluster_list.size() ; point_inside_cluster_list++)
-                                {
-                                    //std::cout<<cluster_list[point_inside_cluster_list]<<"  ";
-                                }
-                                //std::cout<<"\n";
                             }
 
                         }
@@ -369,7 +364,6 @@ int main()
                 cluster new_cluster;
                 for(std::size_t index : block_points)
                 {
-                    //std::cout<<index<<"  ";
                     new_cluster.push_back(std::size_t(index));
                 }
                 clusters.push_back(new_cluster);
@@ -380,7 +374,6 @@ int main()
         {
             // Either the unit was already dense
             // Or it is still non-dense
-           // std::cout<<"No Action Required"<<"\n";
         }
     }
 
@@ -388,9 +381,8 @@ int main()
     std::cout<<"Amount of clusters: " << clusters.size() << std::endl;
     std::cout<<"Amount of outliers: " << outliers.size() << std::endl<<std::endl;
 
-     //logical location = 1,2,
-    //auto map_pointer = clique_block_map.find("1,2,");
-    //int block_index = map_pointer->second;
+    // Processing deleted points below this comment
+
     cluster  possible_new_cluster;
 
 
@@ -400,22 +392,18 @@ int main()
         std::list<std::size_t> points_val = (it)->get_points();
     }
 
-   // std::cout<<"\n\nData In Clique\n\n";
-
-
-    // Processing deleted points below this comment
-
-    Delete_dict(dict);
-    //std::cout <<"number of points to be deleted in dict: "<<dict.size()<<"\n";
-
     const char delim = ',';
 
     for (auto del_point = dict.begin() ; del_point != dict.end() ; del_point++)
     {
+        // Stores the string value of each dimension for the recreated deleted point
+        std::vector<std::string> out;
 
-        std::vector<std::string> out;      // Stores the string value of each dimension for the recreated deleted point
-        clique_block_location c_lof_loc;   // Stores the logical address of a clique block for the del point
-        std::size_t logical_grid_val;      // Stores the logical value of a particular dimension
+        // Stores the logical address of a clique block for the del point
+        clique_block_location c_lof_loc;
+
+        // Stores the logical value of a particular dimension
+        std::size_t logical_grid_val;
         c_lof_loc.clear();
         int i = 0;
 
@@ -428,13 +416,10 @@ int main()
             std::string val = *point_itr;
 
             logical_grid_val = floor(( std::stof(val) - m_min_corner[i]) / (m_sizes[i] / intervals));
-           // std::cout<<"Original Point "<<val<<"  logical value "<<logical_grid_val<<"  ";
             c_lof_loc.push_back(logical_grid_val);
         }
-       // std::cout<<"\n";
+
         // Finding corresponding clique block
-
-
 
         // Matching the logical address
         auto clique_block_index_itr = clique_block_map.find(get_string_logical_location(c_lof_loc));
@@ -448,7 +433,6 @@ int main()
 
         clique_block_location c = temp.get_logical_location();
 
-       // std::cout<<"Number of points before deleting point:  "<<previous_number_of_points<<"\n";
 
         //Deleting from the unit block
         temp.delete_point(del_point->second);
@@ -462,19 +446,12 @@ int main()
             if(it != (*c).end())
             {
                 (*c).erase(it);
-                //std::cout<<"\n\nDeleted from the clusters\n\n";
             }
 
         }
 
-
-
-       // std::cout<<"deleting: "<<del_point->second<<"\n";
-
         block_points = temp.get_points();
 
-
-        //std::cout<<"Number of points after deleted point:  "<<block_points.size()<<"\n";
         next_number_of_points = block_points.size();
 
         if (previous_number_of_points > threshold && next_number_of_points <= threshold)
@@ -510,7 +487,6 @@ int main()
                     std::size_t first_elem =  block_points.front(); // stores the first point of the stored cluster
 
                     // Each cluster ko access kar raha hu
-                    //std::cout<<"Element to be found   "<<first_elem<<"\n";
                     if (std::find(cluster_list.cbegin(), cluster_list.cend(), first_elem) != cluster_list.cend())
                     {
                         //(*c) is to be deleted from cluster lists
@@ -533,8 +509,7 @@ int main()
 
                     std::size_t first_elem =  block_points.front(); // stores the first point of the stored cluster
 
-                    // Each cluster ko access kar raha hu
-                    //std::cout<<"Element to be found   "<<first_elem<<"\n";
+                    // Accessing each cluster
                     if (std::find(cluster_list.cbegin(), cluster_list.cend(), first_elem) != cluster_list.cend())
                     {
                         for(std::size_t del_index : block_points)
@@ -563,7 +538,7 @@ int main()
 
                     std::size_t first_elem =  block_points.front(); // stores the first point of the stored cluster
 
-                    // Each cluster ko access kar raha hu
+                    // Accessing Each cluster
                     if (std::find(cluster_list.cbegin(), cluster_list.cend(), first_elem) != cluster_list.cend())
                     {
                         //(*c) is to be deleted from cluster lists
@@ -596,7 +571,7 @@ int main()
 
                         std::stack<clique_block> stk;
                         stk.push(instant_neighbor);
-                        //std::cout<< std::endl<< std::endl <<"Processing "<<instant_neighbor.get_logical_location_str()<<"\n\n";
+
                         while(!stk.empty())
                         {
 
@@ -606,7 +581,7 @@ int main()
                             stk.pop();
 
                             std::string t = cur_cell.get_logical_location_str();
-                           // std::cout<<" Process Neighbor : "<<t<<"\n";
+
                             if (cur_cell.is_visited() >= cur_dfs_val)
                             {
                                 continue;
@@ -657,14 +632,21 @@ int main()
 
     auto finish = std::chrono::high_resolution_clock::now();
 
-
+    /*
+    Uncomment the below commented code to observe the time taken for the process
+    
     auto duration=std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
     std::cout << "Elapsed time : "<< (duration.count())<< " microsec"<<std::endl<<std::endl<<std::endl;
+    */
+	
+	
+    /*
+    Code to test the memory taken by the program
 
     PROCESS_MEMORY_COUNTERS_EX pmc;
     GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
     SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;
-    std::cout<<"RAM used :"<<virtualMemUsedByMe/(1024)<<" KB"<<std::endl;
+    std::cout<<"RAM used :"<<virtualMemUsedByMe/(1024)<<" KB"<<std::endl;*/
 
 
 
