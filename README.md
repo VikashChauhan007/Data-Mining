@@ -17,15 +17,15 @@ You can check if you cpp version is 14 or by running **CPP_version_check.cpp** i
 
 Steps to Run the Code
 >>>In Codeblocks:
-1. Download the folder by clicking on Code button in github repository.
-2. Unzip the open the folder and copy the folder path.
-3. Now in codeblocks IDE, Go to Settings Tab, then click on compiler
-4. Choose Search directories tab 
-5. In that add the folder path under compiler section:
-6. For example if folder name is ABC,
-      C:\Users\...\ABC
+1. Download the folders in desired folder.
+2. Unzip the folder.
+3. Open Codeblocks IDE.
+4. Choose **Open an existing project** option. Select the CLIQUE project file by navigating to the code directory.
+5. Click on **Settings** from the top pane. Under the dropdown choose **Compiler**.
+6. Choose **Build Options** from the below pane. 
+7. Check the option of **Explicitly add currently compiling file's directiry to compiler search dirs**
 7.Build and Run the program.
->>>It will initially run on Target data file.
+
 
 B.References:
 1. R. Agrawal,  J. Gehrke,  D. Gunopulos, and P. Ragha-van, “Automatic Subspace Clustering of High DimensionalData for Data Mining Applications”.
