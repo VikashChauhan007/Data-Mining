@@ -27,6 +27,6 @@ You can check if you cpp version is 14 or by running **CPP_version_check.cpp** i
 7.Build and Run the program.
 
 
-B.References:
+> References:
 1. R. Agrawal,  J. Gehrke,  D. Gunopulos, and P. Ragha-van, “Automatic Subspace Clustering of High DimensionalData for Data Mining Applications”.
 2. Pyclustering Repository - (https://pyclustering.github.io/)
