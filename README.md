@@ -1,19 +1,19 @@
 # Data-Mining
 The Following Code has been written with the course-work of the  subject **CS568 - Data Mining** at **IIT Guwahati** in winter-2021.
 
-Clique is a clustering algorithm used in unsupervised learning. Which helps to Custer the high dimension data in subspace.
-We have thought of an Incremental Version of the CLIQUE algorithm which can be used to increase the efficiency and reduce the time for the slighly altered dataset.
+Clique is a clustering algorithm used in unsupervised learning. Which helps to Cluster the high dimensional data in it's subspace.
+We have thought of an Incremental Version of the CLIQUE algorithm. Which can increase the efficiency and reduce the running time for the slighly altered dataset.
 
-The original code source was taken from PyClustering Library which has implimented many clustering algorithm in Python and CPP 14.
+The original source code was taken from PyClustering Library which has implimented many clustering algorithm in Python and CPP 14.
 
 The Repository consists of the two folder.
-The folder named as Original CLIQUE is the folder having the original clique algorithm written in CPP 14.
-The folder named as Incremental_Version_CLIQUE is having the code which we are developing for the incremental version of the algorithm.
+The folder named as "Original CLIQUE" is the folder having the original clique algorithm written in CPP 14.
+The folder named as "Incremental_Version_CLIQUE" is having the code which we are developing for the incremental version of the algorithm.
 
 
 Tools Required: Codeblocks with CPP 14.
 
-You can check if you cpp version is 14 or by running **CPP_version_check.cpp** in the codeblocks.
+You can check if your cpp version is 14 or not by running **CPP_version_check.cpp** in the codeblocks.
 
 
 > Steps to Run the Code:
